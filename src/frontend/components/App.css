@@ -36,3 +36,30 @@
     transform: rotate(360deg);
   }
 }
+
+h1 {
+  padding: 50px;
+}
+
+.card-img {
+  max-height: 150px;
+  max-width: 200px;
+  width: inherit;
+  height: inherit;
+}
+
+.row {
+  margin: 0 auto;
+}
+
+.product-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.product-container img {
+  max-width: 680px;
+  max-height: 400px;
+}
+
+

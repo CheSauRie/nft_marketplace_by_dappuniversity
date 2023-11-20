@@ -8,6 +8,7 @@ import Home from './Home.js'
 import Create from './Create.js'
 import MyListedItems from './MyListedItems.js'
 import MyPurchases from './MyPurchases.js'
+import Products from "./Products.js";
 import MarketplaceAbi from '../contractsData/Marketplace.json'
 import MarketplaceAddress from '../contractsData/Marketplace-address.json'
 import NFTAbi from '../contractsData/NFT.json'
@@ -17,6 +18,7 @@ import { ethers } from "ethers"
 import { Spinner } from 'react-bootstrap'
 
 import './App.css';
+import ProductDetail from "./ProductDetail.js";
 
 function App() {
   const [loading, setLoading] = useState(true)
@@ -76,6 +78,12 @@ function App() {
               } />
               <Route path="/my-purchases" element={
                 <MyPurchases marketplace={marketplace} nft={nft} account={account} />
+              } />
+              <Route path="/products" element={
+                <Products />
+              } />
+              <Route path="/products/:productName" element={
+                <ProductDetail />
               } />
             </Routes>
           )}

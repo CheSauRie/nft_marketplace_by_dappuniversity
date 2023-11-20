@@ -19,6 +19,7 @@ const Navigation = ({ web3Handler, account }) => {
                         <Nav.Link as={Link} to="/create">Create</Nav.Link>
                         <Nav.Link as={Link} to="/my-listed-items">My Listed Items</Nav.Link>
                         <Nav.Link as={Link} to="/my-purchases">My Purchases</Nav.Link>
+                        <Nav.Link as={Link} to="/products">Products</Nav.Link>
                     </Nav>
                     <Nav>
                         {account ? (
