@@ -1,11 +1,16 @@
-import React from "react"
-import { useParams } from "react-router-dom"
+import React, { useState } from "react"
+import { useParams, useSearchParams } from "react-router-dom"
 import { Button } from "react-bootstrap";
 
 
 export default function ProductDetail() {
     const { productName } = useParams();
-    console.log(productName)
+
+    const [productDetail, setProductDetail] = useState({
+        price: "",
+        brand: "",
+        images_list: "",
+    });
 
     const loadProductDetail = () => {
         var requestOptions = {
@@ -17,17 +22,39 @@ export default function ProductDetail() {
             .then(response => response.json())
             .then(result => {
                 console.log('Load product detail successfull');
-                console.log(result);
+                console.log(result.product.title);
+                setProductDetail({
+                    ...productDetail,
+                    brand: result.product.brand,
+                    price: result.product.price,
+                    images_list: result.product.images_list
+                });
             }).
             catch(error => console.log('error', error));
     }
 
+    console.log(productDetail);
+    loadProductDetail();
+
     return (
         <div className="product-container">
-            <img src='https://th.bing.com/th/id/R.5371ed482428103757f36f11202383ad?rik=BK5Bt43q3oZrNw&riu=http%3a%2f%2fksassets.timeincuk.net%2fwp%2fuploads%2fsites%2f54%2f2016%2f12%2fmacbook-pro-13-2022-1.jpg&ehk=2EGvNZ1VpKKHBW9QZ%2faoJfy3tTXSDvY8F4hEuSbxx2I%3d&risl=&pid=ImgRaw&r=0'></img>
+            <div>
+                <img src={productDetail.images_list[0]}></img>
+                <div className="img-list">
+                    <img src={productDetail.images_list[0]}></img>
+                    <img src={productDetail.images_list[1]}></img>
+                    <img src={productDetail.images_list[2]}></img>
+                    <img src={productDetail.images_list[3]}></img>
+                    <img src={productDetail.images_list[4]}></img>
+                    <img src={productDetail.images_list[5]}></img>
+                    <img src={productDetail.images_list[6]}></img>
+                </div>
+            </div>
             <div className="product-detail">
                 <h2>{productName}</h2>
-                <Button variant="primary" onClick={loadProductDetail}>Test</Button>
+                <h3>{productDetail.brand}</h3>
+                <h3>{productDetail.price}</h3>
+                <Button variant="dark">Add to cart</Button>
             </div>
         </div>
     )
