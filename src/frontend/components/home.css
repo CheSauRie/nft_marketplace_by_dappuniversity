@@ -1,0 +1,48 @@
+.home {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.home h2 {
+    text-align: center;
+}
+
+.home .card {
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.home .card img {
+    height: 200px;
+    object-fit: cover;
+}
+
+.home .card-title {
+    font-size: 1.1rem;
+}
+
+.home .card-text {
+    color: #777;
+    font-size: 0.9rem;
+}
+
+.home .btn-primary {
+    background-color: #007bff;
+    border: 1px solid #007bff;
+}
+
+.home .btn-primary:hover {
+    background-color: #0069d9;
+    border-color: #0062cc;
+}
+
+@media (max-width: 768px) {
+    .home .card img {
+        height: 150px;
+    }
+
+    .home .btn {
+        font-size: 0.8rem;
+        padding: 8px 12px;
+    }
+}

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { ethers } from "ethers"
 import { Row, Col, Card, Button } from 'react-bootstrap'
+import './home.css'
 
 const Home = ({ marketplace, nft }) => {
   const [loading, setLoading] = useState(true)
@@ -48,7 +49,7 @@ const Home = ({ marketplace, nft }) => {
     </main>
   )
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center home">
       {items.length > 0 ?
         <div className="px-5 container">
           <Row xs={1} md={2} lg={4} className="g-4 py-5">
