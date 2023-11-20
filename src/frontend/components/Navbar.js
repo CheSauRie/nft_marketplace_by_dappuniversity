@@ -4,7 +4,7 @@ import {
 import { Navbar, Nav, Button, Container } from 'react-bootstrap'
 import market from './market.png'
 
-const Navigation = ({ web3Handler, account }) => {
+const Navigation = ({ web3Handler, account, cartCount, setCartCount }) => {
     return (
         <Navbar expand="lg" bg="secondary" variant="dark">
             <Container>
@@ -20,6 +20,7 @@ const Navigation = ({ web3Handler, account }) => {
                         <Nav.Link as={Link} to="/my-listed-items">My Listed Items</Nav.Link>
                         <Nav.Link as={Link} to="/my-purchases">My Purchases</Nav.Link>
                         <Nav.Link as={Link} to="/products">Products</Nav.Link>
+                        <Nav.Link as={Link} to="/cart"><i className="fas fa-shopping-cart"></i> Cart <span className="badge">{cartCount}</span> </Nav.Link>
                     </Nav>
                     <Nav>
                         {account ? (

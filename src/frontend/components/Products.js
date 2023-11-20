@@ -6,10 +6,10 @@ import { Col, Row } from "react-bootstrap"
 import { Link } from "react-router-dom";
 
 
-export default function Products() {
+export default function Products({ cart, setCart, setCartCount }) {
 
     const [productsData, setProductsData] = useState([]);
-
+    // App.js
     const fecthProductsData = () => {
 
         var requestOptions = {
@@ -29,6 +29,10 @@ export default function Products() {
     fecthProductsData();
     console.log(productsData);
 
+    const addToCart = (item) => {
+        setCart(prev => [...prev, item])
+        setCartCount(prev => prev + 1);
+    }
 
     return (
         <div>
@@ -43,6 +47,7 @@ export default function Products() {
                                     <Card.Title as='h6'>{item.title}</Card.Title>
                                     <Card.Text>{item.price}</Card.Text>
                                     <Button variant="light"><Link to={`/products/${item.title}`}>Purchase</Link></Button>
+                                    <Button onClick={() => addToCart(item)}>Add to Cart</Button>
                                 </Card.Body>
                             </Card>
                         </Col>
