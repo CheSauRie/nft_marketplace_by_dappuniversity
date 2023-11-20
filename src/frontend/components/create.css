@@ -1,0 +1,50 @@
+.create-nft {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+}
+
+.form-control {
+    margin-bottom: 15px;
+}
+
+.form-control::placeholder {
+    font-size: 0.9rem;
+}
+
+.form-control-file {
+    padding: 20px;
+    background: #f7f7f7;
+    border-radius: 10px;
+}
+
+.create-button {
+    background: #007bff;
+    border: none;
+    font-size: 1.2rem;
+    padding: 15px 30px;
+    border-radius: 30px;
+    color: #fff;
+    margin-top: 20px;
+}
+
+.create-button:hover {
+    background: #0056b3;
+}
+
+@media (max-width: 768px) {
+    .create-nft {
+        padding: 10px;
+    }
+
+    .form-control {
+        margin-bottom: 10px;
+    }
+
+    .create-button {
+        padding: 10px 20px;
+        font-size: 1rem;
+    }
+}
