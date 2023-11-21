@@ -8,24 +8,36 @@ export default function Cart({ cart, setCart, setCartCount }) {
     async function purchase() {
         // Request account access
         const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-
+    
         // Create a signer object
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
-
+    
         // Calculate total price of cart items
         const totalPrice = cart.reduce((total, item) => total + parseFloat(item.price.replace(/[^\d.-]/g, '')), 0);
-
+    
         // Convert total price to wei (1 ether = 10^18 wei)
         const totalPriceInWei = ethers.utils.parseEther(totalPrice.toString());
-
+    
         // Send transaction
         const tx = await signer.sendTransaction({
             to: '0x70997970C51812dc3A010C7d01b50e0d17dc79C8', // Replace with the merchant's address
             value: totalPriceInWei,
         });
-
+    
         console.log(`Transaction sent with hash: ${tx.hash}`);
+    
+        // Wait for the transaction to be mined
+        const receipt = await provider.waitForTransaction(tx.hash);
+    
+        // Check if the transaction was successful
+        if (receipt.status === 1) {
+            alert('Payment successful!');
+            setCart([]);
+            setCartCount(0);
+        } else {
+            alert('Payment failed!');
+        }
     }
       
     
