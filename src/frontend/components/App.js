@@ -92,7 +92,7 @@ function App() {
                   setCart={setCart} setCartCount={setCartCount} />
               } />
               <Route path="/cart" element={
-                <Cart cart={cart} setCart={setCart} />
+                <Cart cart={cart} setCart={setCart} setCartCount={setCartCount} />
               } />
               <Route path="/products/:productName" element={
                 <ProductDetail />

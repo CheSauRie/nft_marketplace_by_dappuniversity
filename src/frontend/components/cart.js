@@ -1,11 +1,11 @@
 import React, { useState } from "react"
 import './cart.css'
-export default function Cart({ cart, setCart }) {
+export default function Cart({ cart, setCart, setCartCount }) {
 
-    const deleteItem = (id) => {
-
-        setCart(prev => prev.filter(item => item.id !== id))
-
+    const deleteItem = (title) => {
+        console.log(title);
+        setCart(prev => prev.filter(item => item.title !== title))
+        setCartCount(prevCount => prevCount - 1);
     }
     return (
         <div className="cart">
@@ -13,10 +13,10 @@ export default function Cart({ cart, setCart }) {
             <table className="cart-table">
                 <thead>
                     <tr>
-                        <th>Ảnh</th>
-                        <th>Tên sản phẩm</th>
-                        <th>Giá</th>
-                        <th>Xóa</th>
+                        <th>Product</th>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Delete</th>
                     </tr>
                 </thead>
 
@@ -28,12 +28,12 @@ export default function Cart({ cart, setCart }) {
                             </td>
                             <td>{item.title}</td>
                             <td>{item.price}</td>
-                            <td><button onClick={() => deleteItem(item.id)}>Xóa</button></td>
+                            <td><button onClick={() => deleteItem(item.title)}>Delete</button></td>
                         </tr>
                     ))}
                 </tbody>
             </table>
-            <button className="checkout-btn">Thanh toán</button>
+            <button className="checkout-btn">Purchase</button>
         </div>
     )
 }
