@@ -8,6 +8,7 @@ import Home from './Home.js'
 import Create from './Create.js'
 import MyListedItems from './MyListedItems.js'
 import MyPurchases from './MyPurchases.js'
+import Cart from "./cart.js";
 import Products from "./Products.js";
 import MarketplaceAbi from '../contractsData/Marketplace.json'
 import MarketplaceAddress from '../contractsData/Marketplace-address.json'
@@ -16,6 +17,7 @@ import NFTAddress from '../contractsData/NFT-address.json'
 import { useState } from 'react'
 import { ethers } from "ethers"
 import { Spinner } from 'react-bootstrap'
+import { useEffect } from "react";
 
 import './App.css';
 import ProductDetail from "./ProductDetail.js";
@@ -25,6 +27,8 @@ function App() {
   const [account, setAccount] = useState(null)
   const [nft, setNFT] = useState({})
   const [marketplace, setMarketplace] = useState({})
+  const [cart, setCart] = useState([]);
+  const [cartCount, setCartCount] = useState(0);
   // MetaMask Login/Connect
   const web3Handler = async () => {
     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
@@ -52,12 +56,16 @@ function App() {
     setNFT(nft)
     setLoading(false)
   }
+  // useEffect(() => {
+  //   setCartCount(cart.length)
+  // }, [cart])
 
   return (
     <BrowserRouter>
       <div className="App">
         <>
-          <Navigation web3Handler={web3Handler} account={account} />
+          <Navigation web3Handler={web3Handler} account={account} cartCount={cartCount}
+            setCartCount={setCartCount} />
         </>
         <div>
           {loading ? (
@@ -80,7 +88,11 @@ function App() {
                 <MyPurchases marketplace={marketplace} nft={nft} account={account} />
               } />
               <Route path="/products" element={
-                <Products />
+                <Products cart={cart}
+                  setCart={setCart} setCartCount={setCartCount} />
+              } />
+              <Route path="/cart" element={
+                <Cart cart={cart} setCart={setCart} setCartCount={setCartCount} />
               } />
               <Route path="/products/:productName" element={
                 <ProductDetail />

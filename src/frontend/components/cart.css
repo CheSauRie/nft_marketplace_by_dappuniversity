@@ -1,0 +1,33 @@
+/* Cart.css */
+
+.cart {
+    padding: 20px;
+    margin: 20px;
+    background: #fff;
+    border: 1px solid #ddd;
+}
+
+/* các style khác cho .cart-items, .cart-item, .cart-total... */
+.cart-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.cart-table thead {
+    background: #f5f5f5;
+}
+
+.cart-table th,
+.cart-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+.cart-table img {
+    width: 50px;
+    height: 50px;
+}
+
+.checkout-btn {
+    margin-top: 20px;
+}
