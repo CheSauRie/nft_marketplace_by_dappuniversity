@@ -25,7 +25,6 @@ yarn-error.log*
 
 node_modules
 .env
-.glb
 coverage
 coverage.json
 typechain
@@ -33,3 +32,6 @@ typechain
 #Hardhat files
 cache
 artifacts
+
+#model 
+*.glb
