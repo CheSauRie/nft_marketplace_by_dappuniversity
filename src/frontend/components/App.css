@@ -70,3 +70,13 @@ h1 {
   width: inherit;
   height: inherit;
 }
+
+.model-container {
+  position: fixed;
+  top: 10%;
+  left: 20%;
+  background-color: #fff;
+  width: 960px;
+  height: 640px;
+  border: 1px solid #282c34
+}

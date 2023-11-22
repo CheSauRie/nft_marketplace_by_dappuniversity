@@ -48,7 +48,7 @@ export default function Products({ cart, setCart, setCartCount }) {
                                     <Card.Text>{item.price}</Card.Text>
                                     <Button variant="light"><Link to={`/products/${item.title}`}>Purchase</Link></Button>
                                     <Button onClick={() => addToCart(item)}>Add to Cart</Button>
-                                </Card.Body>
+                                 </Card.Body>
                             </Card>
                         </Col>
                     ))
