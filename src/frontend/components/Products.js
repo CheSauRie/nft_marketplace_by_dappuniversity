@@ -36,7 +36,7 @@ export default function Products({ cart, setCart, setCartCount }) {
 
     return (
         <div>
-            <h1>This is Products page</h1>
+            <h1>PRODUCTS</h1>
             <Row xs={2} md={3} xl={4} className="g-4 row">
                 {
                     productsData.map((item, index) => (
@@ -55,7 +55,7 @@ export default function Products({ cart, setCart, setCartCount }) {
                 }
             </Row>
 
-            <Pagination>
+            <Pagination className="pagination">
                 <Pagination.First />
                 <Pagination.Prev />
                 <Pagination.Item active>{1}</Pagination.Item>
