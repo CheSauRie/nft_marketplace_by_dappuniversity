@@ -24,6 +24,7 @@
     "font-awesome": "^4.7.0",
     "hardhat": "^2.8.4",
     "ipfs-http-client": "^56.0.1",
+    "memfs": "^4.6.0",
     "mongoose": "^8.0.1",
     "react": "^18.2.0",
     "react-bootstrap": "^2.1.2",
