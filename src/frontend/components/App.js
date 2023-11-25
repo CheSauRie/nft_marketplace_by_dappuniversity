@@ -10,6 +10,7 @@ import MyListedItems from './MyListedItems.js'
 import MyPurchases from './MyPurchases.js'
 import Cart from "./cart.js";
 import Products from "./Products.js";
+import Rewards from "./rewards.js";
 import MarketplaceAbi from '../contractsData/Marketplace.json'
 import MarketplaceAddress from '../contractsData/Marketplace-address.json'
 import NFTAbi from '../contractsData/NFT.json'
@@ -93,6 +94,9 @@ function App() {
               } />
               <Route path="/cart" element={
                 <Cart cart={cart} setCart={setCart} setCartCount={setCartCount} />
+              } />
+              <Route path="/rewards" element={
+                <Rewards  marketplace={marketplace} nft={nft} />
               } />
               <Route path="/products/:productName" element={
                 <ProductDetail />

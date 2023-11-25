@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
-import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import "./@openzeppelin/contracts/token/ERC721/IERC721.sol";
 
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "./@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
-import "hardhat/console.sol";
+import "./hardhat/console.sol";
 
 contract Marketplace is ReentrancyGuard {
 
@@ -20,6 +20,7 @@ contract Marketplace is ReentrancyGuard {
         uint tokenId;
         uint price;
         address payable seller;
+        address payable owner;
         bool sold;
     }
 
@@ -31,7 +32,7 @@ contract Marketplace is ReentrancyGuard {
         address indexed nft,
         uint tokenId,
         uint price,
-        address indexed seller
+        address indexed owner
     );
     event Bought(
         uint itemId,
@@ -61,6 +62,7 @@ contract Marketplace is ReentrancyGuard {
             _tokenId,
             _price,
             payable(msg.sender),
+            payable(msg.sender),
             false
         );
         // emit Offered event
@@ -77,6 +79,7 @@ contract Marketplace is ReentrancyGuard {
         uint _totalPrice = getTotalPrice(_itemId);
         Item storage item = items[_itemId];
         require(_itemId > 0 && _itemId <= itemCount, "item doesn't exist");
+        require(msg.sender != 0x90F79bf6EB2c4f870365E785982E1f101E93b906, "you are admin of this page");
         require(msg.value >= _totalPrice, "not enough ether to cover item price and market fee");
         require(!item.sold, "item already sold");
         // pay seller and feeAccount
@@ -86,6 +89,7 @@ contract Marketplace is ReentrancyGuard {
         item.sold = true;
         // transfer nft to buyer
         item.nft.transferFrom(address(this), msg.sender, item.tokenId);
+        item.owner = payable(msg.sender);
         // emit Bought event
         emit Bought(
             _itemId,

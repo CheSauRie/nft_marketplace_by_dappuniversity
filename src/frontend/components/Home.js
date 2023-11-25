@@ -12,7 +12,7 @@ const Home = ({ marketplace, nft }) => {
     let items = []
     for (let i = 1; i <= itemCount; i++) {
       const item = await marketplace.items(i)
-      if (!item.sold) {
+      if (!item.sold && item.owner != '0x90F79bf6EB2c4f870365E785982E1f101E93b906') {
         // get uri url from nft contract
         const uri = await nft.tokenURI(item.tokenId)
         // use uri to fetch the nft metadata stored on ipfs 

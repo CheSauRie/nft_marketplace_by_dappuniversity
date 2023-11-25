@@ -21,6 +21,7 @@ const Navigation = ({ web3Handler, account, cartCount, setCartCount }) => {
                         <Nav.Link as={Link} to="/my-purchases">My Purchases</Nav.Link>
                         <Nav.Link as={Link} to="/products">Products</Nav.Link>
                         <Nav.Link as={Link} to="/cart"> <i class="fas fa-shopping-cart"></i> Cart <span className="badge">{cartCount}</span> </Nav.Link>
+                        <Nav.Link as={Link} to="/rewards">Rewards</Nav.Link>
                     </Nav>
                     <Nav>
                         {account ? (
