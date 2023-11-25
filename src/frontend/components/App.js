@@ -10,6 +10,7 @@ import MyListedItems from './MyListedItems.js'
 import MyPurchases from './MyPurchases.js'
 import Cart from "./cart.js";
 import Products from "./Products.js";
+import LandingPage from "./Landingpage.js"
 import MarketplaceAbi from '../contractsData/Marketplace.json'
 import MarketplaceAddress from '../contractsData/Marketplace-address.json'
 import NFTAbi from '../contractsData/NFT.json'
@@ -80,6 +81,9 @@ function App() {
               } />
               <Route path="/create" element={
                 <Create marketplace={marketplace} nft={nft} />
+              } />
+              <Route path="/landing-page" element={
+                <LandingPage />
               } />
               <Route path="/my-listed-items" element={
                 <MyListedItems marketplace={marketplace} nft={nft} account={account} />
