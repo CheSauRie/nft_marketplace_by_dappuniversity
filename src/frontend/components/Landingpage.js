@@ -4,7 +4,7 @@ import quan from "./quan.jpg"
 import minh from "./minh.jpg"
 import nam from "./nam.jpg"
 import video from "./test.mp4"
-import image from './img_bg.avif';
+import image from './img_bg.jpg';
 import shoe from './shoes.jpg'
 import metamask from './MetaMask_Fox.svg.png'
 import nft from './nft.jpg'
@@ -12,23 +12,7 @@ import chatbot from "./chatbotesds.jpg"
 import { Link } from "react-router-dom";
 import "./Landingpage.css"
 function LandingPage() {
-    const members = [
-        {
-            id: '20020211',
-            img: './quan.jpg',
-            email: 'Trịnh Hồng Quân'
-        },
-        {
-            id: '2002443',
-            img: 'https://randomuser.me/api/portraits/women/1.jpg',
-            email: 'Hoàng Gia Minh'
-        },
-        {
-            id: '20020445',
-            img: 'https://randomuser.me/api/portraits/men/2.jpg',
-            email: 'Chu Minh Nam'
-        }
-    ]
+   
     return (
         <div>
             <div className="welcome">
@@ -72,8 +56,7 @@ function LandingPage() {
             </div>
             <div>
                 <picture>
-                    <source srcset={image} type="image/avif" />
-                    <img src={image.replace('.avif', '.jpg')} />
+                    <img src={image} />
                     <div>
                         <Link to="/products">
                             <button className="button-directional-2" >Xem Sản Phẩm</button>
