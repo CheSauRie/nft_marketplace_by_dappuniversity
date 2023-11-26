@@ -22,6 +22,12 @@ app.use(bodyParser.json());
 app.get('/product', async (req, res) => {
     try {
         const productsList = await Product.find().limit(limit);
+        for (let object of productsList) {
+            if (object.price != null) {
+                const tempArr = object.price.split(" ");
+                object.price = tempArr[0];
+            }
+        }
         res.json(productsList);
         console.log(productsList);
         console.log('Fetch successfully')

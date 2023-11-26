@@ -94,7 +94,7 @@ const Create = ({ marketplace, nft }) => {
   return (
 
     <div className="container-fluid mt-5 create-nft">
-      <h1>Tạo NFT</h1>
+      <h1>Create your own NFTs</h1>
       <div className="row">
         <main role="main" className="col-lg-12 mx-auto" style={{ maxWidth: '1000px' }}>
           <div className="content mx-auto">

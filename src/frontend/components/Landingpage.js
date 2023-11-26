@@ -1,5 +1,7 @@
 import React from "react";
 import { ListGroup, Card, CardGroup } from 'react-bootstrap';
+
+//Import images
 import quan from "./quan.jpg"
 import minh from "./minh.jpg"
 import nam from "./nam.jpg"
@@ -9,8 +11,16 @@ import shoe from './shoes.jpg'
 import metamask from './MetaMask_Fox.svg.png'
 import nft from './nft.jpg'
 import chatbot from "./chatbotesds.jpg"
+
+//Import FA icons
+import { faFacebook, faInstagram, faTwitter } from "@fortawesome/free-brands-svg-icons";
+
 import { Link } from "react-router-dom";
+
 import "./Landingpage.css"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+
 function LandingPage() {
    
     return (
@@ -51,7 +61,7 @@ function LandingPage() {
                     muted>
                 </video>
                 <Link to="/create">
-                    <button className="button-directional">Tạo NFT</button>
+                    <button className="button-directional">Create NFTs</button>
                 </Link>
             </div>
             <div>
@@ -59,7 +69,7 @@ function LandingPage() {
                     <img src={image} />
                     <div>
                         <Link to="/products">
-                            <button className="button-directional-2" >Xem Sản Phẩm</button>
+                            <button className="button-directional-2" >View Products</button>
                         </Link>
                     </div>
                 </picture>
@@ -86,7 +96,7 @@ function LandingPage() {
             </ListGroup> */}
 
 
-            <h2 className="feature-main" >Các chức năng chính</h2>
+            <h2 className="feature-main" >Our services</h2>
             <CardGroup className="member-grid-2">
                 <Card>
                     <Card.Img variant="top" src={metamask} />
@@ -105,7 +115,7 @@ function LandingPage() {
                 </Card>
             </CardGroup>
 
-            <h2 className="feature-main" >Thành viên</h2>
+            <h2 className="feature-main" >Members</h2>
             <CardGroup className="member-grid">
                 <Card>
                     <Card.Img variant="top" src={quan} />
@@ -138,9 +148,9 @@ function LandingPage() {
                         <p>Địa chỉ: 144 Xuân Thủy, Cầu Giấy, Hà Nội</p>
 
                         <div className="social-icons">
-                            <i className="fab fa-facebook"></i>
-                            <i className="fab fa-instagram"></i>
-                            <i className="fab fa-twitter"></i>
+                            <FontAwesomeIcon icon={faFacebook} />
+                            <FontAwesomeIcon icon={faInstagram} />
+                            <FontAwesomeIcon icon={faTwitter} />
                         </div>
                     </div>
 

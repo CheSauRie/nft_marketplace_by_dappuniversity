@@ -5,24 +5,26 @@ import { Navbar, Nav, Button, Container } from 'react-bootstrap'
 import market from './market.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
+import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
+
 const Navigation = ({ web3Handler, account, cartCount, setCartCount }) => {
     return (
         <Navbar expand="lg" bg="secondary" variant="dark">
             <Container>
                 <Navbar.Brand href="http://www.dappuniversity.com/bootcamp">
                     <img src={market} width="40" height="40" className="" alt="" />
-                    &nbsp; DApp NFT Marketplace
+                    &nbsp; BOAT E-commerce
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="me-auto">
-                        <Nav.Link as={Link} to="/">Home</Nav.Link>
+                        <Nav.Link as={Link} to="/landing-page">Home</Nav.Link>
+                        <Nav.Link as={Link} to="/">NFTs</Nav.Link>
+                        <Nav.Link as={Link} to="/products">Products</Nav.Link>
                         <Nav.Link as={Link} to="/create">Create</Nav.Link>
                         <Nav.Link as={Link} to="/my-listed-items">My Listed Items</Nav.Link>
                         <Nav.Link as={Link} to="/my-purchases">My Purchases</Nav.Link>
-                        <Nav.Link as={Link} to="/products">Products</Nav.Link>
-                        <Nav.Link as={Link} to="/cart"> <i class="fas fa-shopping-cart"></i> Cart <span className="badge">{cartCount}</span> </Nav.Link>
-                        <Nav.Link as={Link} to="/landing-page">Homiie</Nav.Link>
+                        <Nav.Link as={Link} to="/cart"> <FontAwesomeIcon icon={faShoppingCart} /> Cart <span className="badge">{cartCount}</span> </Nav.Link>
                     </Nav>
                     <Nav>
                         {account ? (
