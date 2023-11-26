@@ -7,8 +7,6 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const Customer = require("./models/Customer.js");
 var cors = require('cors')
-
-const mongoose = require("mongoose");
 const { SupportedAlgorithm } = require("ethers/lib/utils.js");
 
 require("dotenv").config();
