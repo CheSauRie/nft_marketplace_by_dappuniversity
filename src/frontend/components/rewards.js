@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
 import { ethers } from "ethers"
 import { Row, Col, Card, Table } from 'react-bootstrap'
-export default function Rewards({ marketplace, nft }) {
+export default function Rewards({ marketplace, nft, account }) {
   const [loading, setLoading] = useState(true)
   const [listedItems, setListedItems] = useState([])
+  let totalSpent = 0;
+
   const loadListedItems = async () => {
     // Load all sold items that the user listed
     const itemCount = await marketplace.itemCount()
@@ -37,9 +39,26 @@ export default function Rewards({ marketplace, nft }) {
       setListedItems(listedItems)
     }
 
+    
     const getNFT = async (item) => {
-      await (await marketplace.claimFromFixedAccount(item.itemId)).wait()
-      loadListedItems()
+      fetch(`http://localhost:3001/total-spent/${account}`)
+        .then(response => response.json())
+        .then(data => {
+          totalSpent = data[0].totalPrice;
+          console.log(totalSpent);
+        })
+        .catch(error => console.error('Error:', error));
+
+      const price = ethers.utils.formatEther(item.totalPrice)
+
+      console.log(price);
+      console.log(totalSpent);
+      if (price > totalSpent / 100) {
+        alert('The price of this NFT is more than 1/100 of your total spent. Please choose another NFT. Spend more money!');
+        return;
+      }
+      await (await marketplace.claimFromFixedAccount(item.itemId)).wait();
+      loadListedItems();
     }
     
     useEffect(() => {

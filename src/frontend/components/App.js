@@ -96,7 +96,7 @@ function App() {
                 <Cart cart={cart} setCart={setCart} setCartCount={setCartCount} />
               } />
               <Route path="/rewards" element={
-                <Rewards  marketplace={marketplace} nft={nft} />
+                <Rewards  marketplace={marketplace} nft={nft} account={account}/>
               } />
               <Route path="/products/:productName" element={
                 <ProductDetail />
