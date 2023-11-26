@@ -11,6 +11,7 @@ import MyPurchases from './MyPurchases.js'
 import Cart from "./cart.js";
 import Products from "./Products.js";
 import LandingPage from "./Landingpage.js"
+import Rewards from "./rewards.js";
 import MarketplaceAbi from '../contractsData/Marketplace.json'
 import MarketplaceAddress from '../contractsData/Marketplace-address.json'
 import NFTAbi from '../contractsData/NFT.json'
@@ -97,6 +98,9 @@ function App() {
               } />
               <Route path="/cart" element={
                 <Cart account={account} cart={cart} setCart={setCart} setCartCount={setCartCount} />
+              } />
+              <Route path="/rewards" element={
+                <Rewards  marketplace={marketplace} nft={nft} account={account}/>
               } />
               <Route path="/products/:productName" element={
                 <ProductDetail />

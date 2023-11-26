@@ -1,15 +1,22 @@
 const express = require("express");
 const Product = require("./models/Product.js")
+const Payment = require("./models/Payment.js")
 require("./db.js");
 const bodyParser = require("body-parser");
 
 const mongoose = require("mongoose");
 const Customer = require("./models/Customer.js");
+var cors = require('cors')
+
+const mongoose = require("mongoose");
+const { SupportedAlgorithm } = require("ethers/lib/utils.js");
 
 require("dotenv").config();
 
 const port = 3001;
 const app = express();
+app.use(cors())
+app.use(express.json());
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
@@ -82,3 +89,36 @@ app.post('/create-customer', async (req, res) => {
         return res.status(442).send({ error: err.message });
     }
 })
+app.post('/save-payment', async(req, res) => {
+    const {buyer, seller, status, totalPrice, items} = req.body;
+    const payment = new Payment({
+        buyer,
+        seller,
+        status,
+        totalPrice,
+        items
+    })
+    console.log(payment);
+    try {
+        await payment.save();
+        return res.status(200).send({ message: 'Save payment successfully'})
+    } catch (err) {
+        console.log(err);
+        return res.status(442).send({message: err.message})
+    }
+})
+
+app.get('/total-spent/:buyer', async (req, res) => {
+    const buyer = req.params.buyer;
+    try {
+        Payment.aggregate([
+            { $match: { buyer: buyer } },
+            { $group: { _id: '$buyer', totalPrice: { $sum: '$totalPrice' } } }
+        ])
+        .then(result => {res.json(result);})
+        .catch(err => console.error(err));
+        
+    } catch (error) {
+        res.status(500).json({ error: 'Error fetching products data' });
+    }
+});

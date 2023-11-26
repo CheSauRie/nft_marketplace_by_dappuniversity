@@ -54,8 +54,9 @@ export default function Cart({ account, cart, setCart, setCartCount }) {
     }
 
     async function purchase() {
-
+        
         const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        const userAddress = accounts[0]; 
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
         const totalPrice = cart.reduce((total, item) => total + parseFloat(item.price.replace(/[^\d.-]/g, '')), 0);
@@ -67,8 +68,28 @@ export default function Cart({ account, cart, setCart, setCartCount }) {
             value: totalPriceInWei,
         });
 
+    
         console.log(`Transaction sent with hash: ${tx.hash}`);
         const receipt = await provider.waitForTransaction(tx.hash);
+
+        const paymentData = {
+            buyer: userAddress,
+            seller: '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
+            status: receipt.status === 1 ? 'success' : 'failure',
+            totalPrice: totalPrice,
+            items: cart,
+        };
+    
+        const response = await fetch('http://localhost:3001/save-payment', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(paymentData),
+        });
+
+        console.log(response.status)
+        
         if (receipt.status === 1) {
             alert('Thanh toán thành công!');
             setCart([]);
