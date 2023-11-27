@@ -8,7 +8,13 @@ import { OrbitControls } from '@react-three/drei';
 import { set } from "mongoose";
 
 
-export default function ProductDetail() {
+export default function ProductDetail({ cart, setCart, setCartCount }) {
+
+    const addToCart = (item) => {
+        setCart(prev => [...prev, item])
+        setCartCount(prev => prev + 1);
+    }
+
     const { productName } = useParams();
     const [renderModel, setRenderModel] = useState(false);
 
@@ -55,6 +61,13 @@ export default function ProductDetail() {
     console.log(productDetail);
     loadProductDetail();
 
+    const item = {
+        title: productName,
+        brand: productDetail.brand,
+        price: productDetail.price,
+        images_list: productDetail.images_list[0]
+    };
+
     return (
         <div className="product-container">
             <div>
@@ -67,7 +80,7 @@ export default function ProductDetail() {
                 <h3>{productDetail.brand}</h3>
                 <h3>{productDetail.price}</h3>
                 <div className="btn-group">
-                    <Button variant="dark">Add to cart</Button>
+                    <Button variant="dark" onClick={() => addToCart(item)}>Add to cart</Button>
                     <Button variant="dark" onClick={() => { setRenderModel(true) }}>Customize with our 3D model</Button>
                 </div>
                 <div className="img-list">

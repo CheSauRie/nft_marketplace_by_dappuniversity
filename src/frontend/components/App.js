@@ -120,7 +120,7 @@ function App() {
                 <Rewards  marketplace={marketplace} nft={nft} account={account}/>
               } />
               <Route path="/products/:productName" element={
-                <ProductDetail />
+                <ProductDetail cart={cart} setCart={setCart} setCartCount={setCartCount}/>
               } />
             </Routes>
           )}
