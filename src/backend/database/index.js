@@ -8,6 +8,8 @@ const mongoose = require("mongoose");
 const Customer = require("./models/Customer.js");
 var cors = require('cors')
 const { SupportedAlgorithm } = require("ethers/lib/utils.js");
+const { async } = require("q");
+const { result } = require("underscore");
 
 require("dotenv").config();
 
@@ -130,3 +132,14 @@ app.get('/total-spent/:buyer', async (req, res) => {
         res.status(500).json({ error: 'Error fetching products data' });
     }
 });
+
+app.get('/purchase/:buyer', async (req, res) => {
+    try {
+        const buyer = req.params.buyer;
+        const payment_data = await Payment.find({buyer: buyer});
+        console.log(payment_data);
+        res.json(payment_data);
+    } catch (error) {
+        res.status(500).json({ error: 'Error loading purchases item' });
+    }
+})

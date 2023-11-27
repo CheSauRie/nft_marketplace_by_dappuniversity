@@ -40,8 +40,10 @@ export default function Products({ cart, setCart, setCartCount }) {
         setCartCount(prev => prev + 1);
     }
 
+    fecthProductsData();
+
     return (
-        <div>
+        <div className="products">
             <h1>PRODUCTS</h1>
             <div className="search-bar">
                 <form>

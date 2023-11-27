@@ -5,9 +5,10 @@ import { Row, Col, Card } from 'react-bootstrap'
 export default function MyPurchases({ marketplace, nft, account }) {
   const [loading, setLoading] = useState(true)
   const [purchases, setPurchases] = useState([])
-  const loadPurchasedItems = async () => {
+  const [boughtItems, setBoughtItems] = useState([])
+  const loadNFTItems = async () => {
     // Fetch purchased items from marketplace by quering Offered events with the buyer set as the user
-    const filter =  marketplace.filters.Bought(null,null,null,null,null,account)
+    const filter = marketplace.filters.Bought(null, null, null, null, null, account)
     const results = await marketplace.queryFilter(filter)
     //Fetch metadata of each nft and add that to listedItem object.
     const purchases = await Promise.all(results.map(async i => {
@@ -34,24 +35,61 @@ export default function MyPurchases({ marketplace, nft, account }) {
     setLoading(false)
     setPurchases(purchases)
   }
+
+  const loadPurchasedItems = () => {
+    var requestOptions = {
+      method: 'GET',
+      redirect: 'follow'
+    };
+
+    fetch(`http://localhost:3001/purchase/${account}`, requestOptions)
+      .then(response => response.json())
+      .then(result => {
+        let tempArr = [];
+        for (let obj of result) {
+          for (let object of obj.items) {
+            tempArr.push(object);
+          }
+        }
+        setBoughtItems(tempArr);
+        console.log(tempArr);
+        console.log(boughtItems);
+      })
+      .catch(error => console.log('error', error));
+  }
+
   useEffect(() => {
-    loadPurchasedItems()
+    loadNFTItems();
+    loadPurchasedItems();
   }, [])
   if (loading) return (
     <main style={{ padding: "1rem 0" }}>
       <h2>Loading...</h2>
     </main>
   )
+
   return (
     <div className="flex justify-center">
       {purchases.length > 0 ?
         <div className="px-5 container">
+          <h2 style={{margin: 20}}> NFTs </h2>
           <Row xs={1} md={2} lg={4} className="g-4 py-5">
             {purchases.map((item, idx) => (
               <Col key={idx} className="overflow-hidden">
                 <Card>
                   <Card.Img variant="top" src={item.image} />
                   <Card.Footer>{ethers.utils.formatEther(item.totalPrice)} ETH</Card.Footer>
+                </Card>
+              </Col>
+            ))}
+          </Row>
+          <h2>Other products</h2>
+          <Row xs={1} md={2} lg={4} className="g-4 py-5">
+            {boughtItems.map((item, idx) => (
+              <Col key={idx} className="overflow-hidden">
+                <Card>
+                  <Card.Img style={{minHeight: 300, height: 'inherit'}} variant="top" src={item.images_list[0]} />
+                  <Card.Footer>{item.price} USD</Card.Footer>
                 </Card>
               </Col>
             ))}

@@ -21,12 +21,15 @@ export default function ProductDetail() {
 
     //Images list index;
     const [index, setIndex] = useState(0);
+    const [size, setSize] = useState(7);
 
     const [productDetail, setProductDetail] = useState({
         price: "",
         brand: "",
         images_list: "",
     });
+
+    const sizeArray = [7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11];
 
     const loadProductDetail = () => {
         var requestOptions = {
@@ -63,8 +66,10 @@ export default function ProductDetail() {
                 <h2>{productName}</h2>
                 <h3>{productDetail.brand}</h3>
                 <h3>{productDetail.price}</h3>
-                <Button variant="dark">Add to cart</Button>
-                <Button variant="dark" onClick={() => { setRenderModel(true) }}>Customize with our 3D model</Button>
+                <div className="btn-group">
+                    <Button variant="dark">Add to cart</Button>
+                    <Button variant="dark" onClick={() => { setRenderModel(true) }}>Customize with our 3D model</Button>
+                </div>
                 <div className="img-list">
                     <div className="img-item" style={{ border: index === 0 ? '1px solid #000' : 'none' }} onClick={() => { setIndex(0) }}>
                         <img src={productDetail.images_list[0]}></img>
@@ -87,6 +92,21 @@ export default function ProductDetail() {
                     <div className="img-item" style={{ border: index === 6 ? '1px solid #000' : 'none' }} onClick={() => { setIndex(6) }}>
                         <img src={productDetail.images_list[6]}></img>
                     </div>
+                </div>
+                <h2>CHOOSE SIZE</h2>
+                <div className="size-picker">
+                    {
+                        sizeArray.map((item) => (
+                            <div style={{
+                                width: 50, height: 50, border: size === item ? "3px solid #000" : "1px solid #000",
+                                display: 'flex', alignItems: 'center', justifyContent: 'center'
+                            }}
+                                onClick={() => { setSize(item) }}
+                            >
+                                <p>{item}</p>
+                            </div>
+                        ))
+                    }
                 </div>
             </div>
             {
