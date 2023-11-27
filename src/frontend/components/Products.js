@@ -5,10 +5,14 @@ import { Button } from "react-bootstrap"
 import { Col, Row } from "react-bootstrap"
 import { Link } from "react-router-dom";
 
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 
 export default function Products({ cart, setCart, setCartCount }) {
 
     const [productsData, setProductsData] = useState([]);
+    const [searchTarget, setSearchTarget] = useState(null);
     const maxTitleLength = 50;
     // App.js
     const fecthProductsData = () => {
@@ -18,7 +22,7 @@ export default function Products({ cart, setCart, setCartCount }) {
             redirect: 'follow',
         };
 
-        fetch("http://localhost:3001/product", requestOptions)
+        fetch(`http://localhost:3001/product/${searchTarget}`, requestOptions)
             .then(response => response.text())
             .then(result => {
                 console.log(result);
@@ -39,7 +43,13 @@ export default function Products({ cart, setCart, setCartCount }) {
     return (
         <div>
             <h1>PRODUCTS</h1>
-            <Button onClick={fecthProductsData}>Test</Button>
+            <div className="search-bar">
+                <form>
+                    <input type="text" placeholder="Type something" onChange={(e) => setSearchTarget(e.target.value)}></input>
+                    <FontAwesomeIcon icon={faSearch} onClick={fecthProductsData} />
+                </form>
+                
+            </div>
             <Row xs={2} md={3} xl={4} className="g-4 row">
                 {
                     productsData.map((item, index) => (

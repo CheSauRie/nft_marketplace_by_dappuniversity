@@ -27,6 +27,7 @@ import ProductDetail from "./ProductDetail.js";
 function App() {
   const [loading, setLoading] = useState(true)
   const [account, setAccount] = useState(null)
+  const [auth, setAuth] = useState(false)
   const [nft, setNFT] = useState({})
   const [marketplace, setMarketplace] = useState({})
   const [cart, setCart] = useState([]);
@@ -50,6 +51,23 @@ function App() {
     })
     loadContracts(signer)
   }
+
+  const checkCustomer = () => {
+    var requestOptions = {
+        method: 'GET',
+        redirect: 'follow'
+    };
+
+    fetch(`http://localhost:3001/auth/${account}`, requestOptions)
+        .then(response => response.json())
+        .then(result => {
+            if (result.message === true) {
+              setAuth(true);
+            }
+        }).
+        catch(error => console.log('error', error));
+  }
+
   const loadContracts = async (signer) => {
     // Get deployed copies of contracts
     const marketplace = new ethers.Contract(MarketplaceAddress.address, MarketplaceAbi.abi, signer)
@@ -58,9 +76,8 @@ function App() {
     setNFT(nft)
     setLoading(false)
   }
-  // useEffect(() => {
-  //   setCartCount(cart.length)
-  // }, [cart])
+  
+  checkCustomer();
 
   return (
     <BrowserRouter>
@@ -97,7 +114,7 @@ function App() {
                   setCart={setCart} setCartCount={setCartCount} />
               } />
               <Route path="/cart" element={
-                <Cart account={account} cart={cart} setCart={setCart} setCartCount={setCartCount} />
+                <Cart account={account} auth={auth} cart={cart} setCart={setCart} setCartCount={setCartCount} />
               } />
               <Route path="/rewards" element={
                 <Rewards  marketplace={marketplace} nft={nft} account={account}/>
