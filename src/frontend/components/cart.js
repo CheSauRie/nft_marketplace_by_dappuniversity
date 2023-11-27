@@ -2,32 +2,15 @@ import React, { useState } from "react"
 import './cart.css'
 import { errors, ethers } from 'ethers';
 import { Row, Form, Button } from "react-bootstrap";
-export default function Cart({ account, cart, setCart, setCartCount }) {
+export default function Cart({ account, auth, cart, setCart, setCartCount }) {
 
-    const [customer, setCustomer] = useState(false);
     const [customerInfo, setCustomerInfo] = React.useState({
         customerId: account,
         customerName: '',
         address: '',
     })
 
-    const checkCustomer = () => {
-        var requestOptions = {
-            method: 'GET',
-            redirect: 'follow'
-        };
-
-        fetch(`http://localhost:3001/auth/${account}`, requestOptions)
-            .then(response => response.json())
-            .then(result => {
-                if (result.message === true) {
-                    setCustomer(true);
-                }
-            }).
-            catch(error => console.log('error', error));
-    }
-
-    checkCustomer();
+    console.log(auth);
 
     const authCustomer = () => {
         var raw = JSON.stringify({
@@ -87,7 +70,7 @@ export default function Cart({ account, cart, setCart, setCartCount }) {
     return (
         <div className="cart">
             {
-                customer ? (
+                auth ? (
                     <div>
 
                         <table className="cart-table">
@@ -127,7 +110,6 @@ export default function Cart({ account, cart, setCart, setCartCount }) {
                                 <div className="d-grid px-0">
                                     <Button onClick={() => {
                                         authCustomer();
-                                        setCustomer(true);
                                     }} variant="primary" size="lg">
                                         Submit and Go to Cart
                                     </Button>

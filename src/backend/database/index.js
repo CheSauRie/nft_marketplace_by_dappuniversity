@@ -19,9 +19,18 @@ const limit = 20;
 
 app.use(bodyParser.json());
 
-app.get('/product', async (req, res) => {
+app.get('/product/:target', async (req, res) => {
     try {
-        const productsList = await Product.find().limit(limit);
+        const target = req.params.target;
+        console.log(target);
+        let productsList;
+        if (target == 'null' || target == ' ') {
+            console.log('Check 1');
+            productsList = await Product.find().limit(limit);
+        } else {
+            console.log('Check 2');
+            productsList = await Product.find({ title: {$regex: target}}).limit(limit);
+        }
         for (let object of productsList) {
             if (object.price != null) {
                 const tempArr = object.price.split(" ");
@@ -41,6 +50,7 @@ app.get('/product/:name', async (req, res) => {
     try {
         const productName = req.params.name;
         const product = await Product.findOne({ title: productName });
+        console.log(product);
         res.json({ product });
     } catch (error) {
         res.status(500).json({ error: 'Error loading product detail' })
@@ -76,7 +86,7 @@ app.post('/create-customer', async (req, res) => {
     })
     try {
         await customer.save();
-        return res.status(200).send({ message: 'Save info successfull' });
+        return res.status(200).send({ message: 'Save info successfull, please reload page' });
     } catch (err) {
         console.log('Error', err);
         return res.status(442).send({ error: err.message });
