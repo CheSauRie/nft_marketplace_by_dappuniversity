@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { ethers } from "ethers"
 import { Row, Form, Button } from 'react-bootstrap'
 import './create.css'
+import Home from './Home'
 
 const Create = ({ marketplace, nft }) => {
   const [fileImg, setFile] = useState(null);
@@ -37,18 +38,12 @@ const Create = ({ marketplace, nft }) => {
       console.log("JSON to IPFS: ")
       console.log(error);
     }
-
-
   }
 
-
-
   const sendFileToIPFS = async (e) => {
-
     e.preventDefault();
     console.log("123");
     console.log(e);
-
 
     if (fileImg) {
       try {
@@ -72,7 +67,6 @@ const Create = ({ marketplace, nft }) => {
         console.log(ImgHash);
         sendJSONtoIPFS(ImgHash)
 
-
       } catch (error) {
         console.log("File to IPFS: ")
         console.log(error)
@@ -90,7 +84,9 @@ const Create = ({ marketplace, nft }) => {
     // add nft to marketplace
     const listingPrice = ethers.utils.parseEther(price.toString())
     await (await marketplace.makeItem(nft.address, id, listingPrice)).wait()
+    alert('NFT created successfully!');
   }
+
   return (
 
     <div className="container-fluid mt-5 create-nft">

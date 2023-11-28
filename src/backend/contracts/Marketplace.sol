@@ -78,8 +78,8 @@ contract Marketplace is ReentrancyGuard {
     function purchaseItem(uint _itemId) external payable nonReentrant {
         uint _totalPrice = getTotalPrice(_itemId);
         Item storage item = items[_itemId];
-        require(_itemId > 0 && _itemId <= itemCount, "item doesn't exist");
         require(msg.sender != 0x90F79bf6EB2c4f870365E785982E1f101E93b906, "you are admin of this page");
+        require(_itemId > 0 && _itemId <= itemCount, "item doesn't exist");
         require(msg.value >= _totalPrice, "not enough ether to cover item price and market fee");
         require(!item.sold, "item already sold");
         // pay seller and feeAccount
@@ -100,6 +100,8 @@ contract Marketplace is ReentrancyGuard {
             msg.sender
         );
     }
+
+
     function getTotalPrice(uint _itemId) view public returns(uint){
         return((items[_itemId].price*(100 + feePercent))/100);
     }
