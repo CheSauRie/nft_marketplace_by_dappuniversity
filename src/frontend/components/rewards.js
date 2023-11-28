@@ -99,7 +99,7 @@ export default function Rewards({ marketplace, nft, account }) {
         </div>
         : (
             <main style={{ padding: "1rem 0" }}>
-            <h2>No listed assets</h2>
+            <h2>No Rewards</h2>
             </main>
         )}
     </div>
