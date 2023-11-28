@@ -65,7 +65,7 @@ export default function ProductDetail({ cart, setCart, setCartCount }) {
         title: productName,
         brand: productDetail.brand,
         price: productDetail.price,
-        images_list: productDetail.images_list[0]
+        images_list: productDetail.images_list
     };
 
     return (
