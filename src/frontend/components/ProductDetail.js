@@ -4,8 +4,9 @@ import { Button } from "react-bootstrap";
 import { Canvas } from '@react-three/fiber';
 import { Model } from './Af1';
 import { Suspense } from 'react';
-import { OrbitControls } from '@react-three/drei';
-import { set } from "mongoose";
+import { OrbitControls, Environment, ContactShadows } from '@react-three/drei';
+
+
 
 
 export default function ProductDetail({ cart, setCart, setCartCount }) {
@@ -125,39 +126,60 @@ export default function ProductDetail({ cart, setCart, setCartCount }) {
             {
                 renderModel && (
                     <div className="model-container">
-                        <Button variant="dark" onClick={() => { setRenderModel(false) }}>Close</Button>
-                        <Canvas>
-                            <Suspense fallback={null}>
-                                <ambientLight intensity={1.0} />
-                                <spotLight intensity={0.9} angle={1.0} penumbra={1}
-                                    position={[10, 15, 10]} castShadow />
-                                <Model customColors={{
-                                    laces: lacesColor,
-                                    flaps: flapsColor,
-                                    soles: solesColor,
-                                    main: mainColor,
-                                    tag: tagsColor
-                                }} />
-                                <OrbitControls enablePan={true} enableZoom={true} enableRotate={true} />
-                            </Suspense>
-                        </Canvas>
-                        <div className="color-picker">
-                            <div>
-                                <input type="color" id="laces" name="laces" value={lacesColor}
-                                    onChange={(e) => setLacesColor(e.target.value)}></input>
-                                <label for="laces">Laces</label>
-                                <input type="color" id="flaps" name="flaps" value={flapsColor}
-                                    onChange={(e) => setflapsColor(e.target.value)}></input>
-                                <label for="flaps">Flaps</label>
-                                <input type="color" id="soles" name="soles" value={solesColor}
-                                    onChange={(e) => setSolesColor(e.target.value)}></input>
-                                <label for="soles">Sole</label>
-                                <input type="color" id="main" name="main" value={mainColor}
-                                    onChange={(e) => setMainColor(e.target.value)}></input>
-                                <label for="main">Main</label>
-                                <input type="color" id="tags" name="tags" value={tagsColor}
-                                    onChange={(e) => setTagsColor(e.target.value)}></input>
-                                <label for="tags">Tag</label>
+                        <div className="header">
+                            <h1>{productName} by you</h1>
+                            <Button
+                                style={{ position: 'fixed', right: 50, borderRadius: 20 }}
+                                onClick={() => { setRenderModel(false) }}
+                                variant="dark">Done</Button>
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'row', height: '70vh' }}>
+                            <Canvas
+                                camera={{ position: [0, 0, 4], fov: 40, near: 0.1, far: 1000 }}
+                                shadows={true}
+                            >
+                                <Suspense fallback={null}>
+                                    <ambientLight intensity={0.7} />
+                                    <spotLight intensity={0.5} angle={0.1} penumbra={1} position={[10, 15, -5]} castShadow />
+                                    <Environment preset="city" background blur={1} />
+                                    <ContactShadows resolution={512} position={[0, -0.8, 0]} opacity={1} scale={10} blur={2} far={0.8} />
+                                    <Model
+                                        customColors={{
+                                            laces: lacesColor,
+                                            flaps: flapsColor,
+                                            soles: solesColor,
+                                            main: mainColor,
+                                            tag: tagsColor
+                                        }} />
+                                    <OrbitControls enablePan={true} enableZoom={true} enableRotate={true} />
+                                </Suspense>
+                            </Canvas>
+                            <div className="color-picker">
+                                <div className="row">
+                                    <input type="color" id="laces" name="laces" value={lacesColor}
+                                        onChange={(e) => setLacesColor(e.target.value)}></input>
+                                    <label for="laces">Laces</label>
+                                </div>
+                                <div className="row">
+                                    <input type="color" id="flaps" name="flaps" value={flapsColor}
+                                        onChange={(e) => setflapsColor(e.target.value)}></input>
+                                    <label for="flaps">Flaps</label>
+                                </div>
+                                <div className="row">
+                                    <input type="color" id="soles" name="soles" value={solesColor}
+                                        onChange={(e) => setSolesColor(e.target.value)}></input>
+                                    <label for="soles">Sole</label>
+                                </div>
+                                <div className="row">
+                                    <input type="color" id="main" name="main" value={mainColor}
+                                        onChange={(e) => setMainColor(e.target.value)}></input>
+                                    <label for="main">Main</label>
+                                </div>
+                                <div className="row">
+                                    <input type="color" id="tags" name="tags" value={tagsColor}
+                                        onChange={(e) => setTagsColor(e.target.value)}></input>
+                                    <label for="tags">Tag</label>
+                                </div>
                             </div>
                         </div>
                     </div>
