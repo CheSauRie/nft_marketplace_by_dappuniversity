@@ -128,48 +128,4 @@ contract Marketplace is ReentrancyGuard {
             msg.sender
         );
     }
-
-    function reSell(uint _itemId, uint _price) external nonReentrant {
-        Item storage item = items[_itemId];
-        require(item.nft.ownerOf(item.tokenId) == msg.sender, "You are not the owner of the NFT");
-        require(item.owner == msg.sender, "Only the owner can resell the item");
-        require(item.sold, "Item not sold");
-
-        // Transfer the token back to the contract
-        item.nft.transferFrom(msg.sender, address(this), item.tokenId);
-
-        // Update the item details
-        item.price = _price;
-        item.sold = false;
-        item.seller = payable(msg.sender);
-        item.owner = payable(address(0));
-
-        // Emit the Offered event
-        emit Offered(
-            _itemId,
-            address(item.nft),
-            item.tokenId,
-            item.price,
-            msg.sender
-        );
-    }
-    
-    function getItemsByOwner(address owner) public view returns (Item[] memory) {
-    Item[] memory ownedItems;
-    uint counter = 0;
-    for (uint i = 0; i < itemCount; i++) {
-        if (items[i].owner == owner) {
-            ownedItems[counter] = items[i];
-            counter++;
-        }
-    }
-    // resize the array to save space
-    assembly { mstore(ownedItems, counter) }
-    return ownedItems;
-    }
-
-    function isSold(uint _itemId) public view returns (bool) {
-        Item storage item = items[_itemId];
-        return item.sold;
-    }
 }

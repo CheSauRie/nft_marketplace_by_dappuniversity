@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { ethers } from "ethers"
-import { Row, Col, Card, Button } from 'react-bootstrap'
+import { Row, Col, Card } from 'react-bootstrap'
 
 export default function MyPurchases({ marketplace, nft, account }) {
   const [loading, setLoading] = useState(true)
@@ -21,7 +21,6 @@ export default function MyPurchases({ marketplace, nft, account }) {
       const metadata = await response.json()
       // get total price of item (item price + fee)
       const totalPrice = await marketplace.getTotalPrice(i.itemId)
-      const sold = await marketplace.isSold(i.itemId)
       // define listed item object
       let purchasedItem = {
         totalPrice,
@@ -29,13 +28,10 @@ export default function MyPurchases({ marketplace, nft, account }) {
         itemId: i.itemId,
         name: metadata.name,
         description: metadata.description,
-        image: metadata.image,
-        sold: sold,
-        owner: i.owner
+        image: metadata.image
       }
       return purchasedItem
-      
-      }))
+    }))
     setLoading(false)
     setPurchases(purchases)
   }
@@ -62,12 +58,6 @@ export default function MyPurchases({ marketplace, nft, account }) {
       .catch(error => console.log('error', error));
   }
 
-  const reSell = async (item) => {
-    let priceInEther = ethers.utils.formatEther(item.totalPrice);
-    await (await marketplace.reSell(item.itemId, ethers.utils.parseEther(priceInEther))).wait();
-    loadNFTItems();
-  }
-
   useEffect(() => {
     loadNFTItems();
     loadPurchasedItems();
@@ -85,17 +75,10 @@ export default function MyPurchases({ marketplace, nft, account }) {
           <h2 style={{margin: 20}}> NFTs </h2>
           <Row xs={1} md={2} lg={4} className="g-4 py-5">
             {purchases.map((item, idx) => (
-              !item.sold ? null :
               <Col key={idx} className="overflow-hidden">
                 <Card>
                   <Card.Img variant="top" src={item.image} />
-                  <Card.Footer>
-                    <div className='d-grid'>
-                      <Button onClick={() => reSell(item)} variant="primary" size="lg">
-                        Sell with {ethers.utils.formatEther(item.totalPrice)} ETH
-                      </Button>
-                    </div>
-                  </Card.Footer>
+                  <Card.Footer>{ethers.utils.formatEther(item.totalPrice)} ETH</Card.Footer>
                 </Card>
               </Col>
             ))}
