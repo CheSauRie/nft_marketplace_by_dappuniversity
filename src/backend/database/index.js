@@ -10,13 +10,19 @@ var cors = require('cors')
 const { SupportedAlgorithm } = require("ethers/lib/utils.js");
 const { async } = require("q");
 const { result } = require("underscore");
+const path = require('path');
 
 require("dotenv").config();
 
 const port = 3001;
 const app = express();
-app.use(cors())
+app.use(cors({
+    origin: 'http://localhost:3000' // restricts CORS to this origin
+}));
 app.use(express.json());
+app.use('/contractsData', express.static(path.join(__dirname, '../../frontend/contractsData')));
+
+
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);

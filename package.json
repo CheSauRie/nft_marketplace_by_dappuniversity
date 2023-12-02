@@ -25,6 +25,7 @@
     "ethereum-waffle": "^3.4.0",
     "ethers": "^5.7.2",
     "font-awesome": "^4.7.0",
+    "fs": "^0.0.1-security",
     "hardhat": "^2.8.4",
     "ipfs-http-client": "^56.0.1",
     "memfs": "^4.6.0",

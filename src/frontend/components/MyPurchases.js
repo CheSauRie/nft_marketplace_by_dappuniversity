@@ -22,6 +22,7 @@ export default function MyPurchases({ marketplace, nft, account }) {
       // get total price of item (item price + fee)
       const totalPrice = await marketplace.getTotalPrice(i.itemId)
       const sold = await marketplace.isSold(i.itemId)
+      const tokenId = await marketplace.getTokenId(i.itemId)
       // define listed item object
       let purchasedItem = {
         totalPrice,
@@ -31,7 +32,7 @@ export default function MyPurchases({ marketplace, nft, account }) {
         description: metadata.description,
         image: metadata.image,
         sold: sold,
-        owner: i.owner
+        tokenId: tokenId
       }
       return purchasedItem
       
@@ -63,6 +64,65 @@ export default function MyPurchases({ marketplace, nft, account }) {
   }
 
   const reSell = async (item) => {
+    let nftContract;
+    let marketplaceContract;
+    let nftAddress;
+    let marketplaceAddress;
+
+    // Fetch the contract address
+    await fetch('http://localhost:3001/contractsData/NFT.json')
+      .then(response => {
+        console.log("Status code:", response.status);
+        return response.json();
+      })
+      .then(data => {
+        nftContract = data.abi;
+        console.log(nftContract);
+      })
+      .catch(error => console.error(error));
+
+
+      await fetch('http://localhost:3001/contractsData/NFT-address.json')
+      .then(response => {
+        console.log("Status code:", response.status);
+        return response.json();
+      })
+      .then(data => {
+        nftAddress = data.address;
+        console.log(nftAddress);
+      })
+      .catch(error => console.error(error));
+
+      await fetch('http://localhost:3001/contractsData/Marketplace-address.json')
+      .then(response => {
+        console.log("Status code:", response.status);
+        return response.json();
+      })
+      .then(data => {
+        marketplaceAddress = data.address;
+        console.log(marketplaceAddress);
+      })
+      .catch(error => console.error(error));
+
+    // Fetch the contract ABI
+    await fetch('http://localhost:3001/contractsData/Marketplace.json')
+      .then(response => {
+        console.log("Status code:", response.status);
+        return response.json();
+      })
+      .then(data => {
+        marketplaceContract = data.abi;
+        console.log(marketplaceContract);
+      });
+      
+    // Now you can use contractAddress and contractABI to interact with your contract
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const tokenId = item.tokenId; // The ID of the token you want to approve for transfer
+    const nftContractInstance = new ethers.Contract(nftAddress, nftContract, signer);
+    const tx = await nftContractInstance.setApprovalForAll(marketplaceAddress, true);
+    await tx.wait();
+    // Approve the marketplace contract to transfer the token on behalf of the owner
     let priceInEther = ethers.utils.formatEther(item.totalPrice);
     await (await marketplace.reSell(item.itemId, ethers.utils.parseEther(priceInEther))).wait();
     loadNFTItems();
