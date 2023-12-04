@@ -10,8 +10,25 @@ var cors = require('cors')
 const { SupportedAlgorithm } = require("ethers/lib/utils.js");
 const { async } = require("q");
 const { result } = require("underscore");
+const WorkshopItem = require("./models/WorkshopItem.js");
 
 require("dotenv").config();
+
+var fs = require('fs');
+var path = require('path');
+
+var multer = require('multer');
+ 
+var storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads')
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.fieldname + '-' + Date.now())
+    }
+});
+ 
+var upload = multer({ storage: storage });
 
 const port = 3001;
 const app = express();
@@ -84,6 +101,17 @@ app.get('/auth/:id', async (req, res) => {
 
 });
 
+app.get('/workshop-item', async (req, res) => {
+    try {
+        const workshopItem = await WorkshopItem.find();
+        res.json(workshopItem);
+        console.log(workshopItem);
+        console.log('Fetch successfully');
+    } catch (error) {
+        res.status(500).json({ error: 'Error fetching workshop item' })
+    }
+})
+
 app.post('/create-customer', async (req, res) => {
     const { customerId, customerName, address } = req.body;
     const customer = new Customer({
@@ -99,6 +127,33 @@ app.post('/create-customer', async (req, res) => {
         return res.status(442).send({ error: err.message });
     }
 })
+
+app.post('/create-item', upload.single('image') ,async (req, res) => {
+    const {
+        title,
+        price,
+        author,
+    } = req.body;
+    const brand = 'BOAT';
+    const item = new WorkshopItem({
+        title,
+        price,
+        brand,
+        img: {
+            data: fs.readFileSync(path.join(__dirname + '/uploads/' + req.file.filename)),
+            contentType: 'image/png'
+        },
+        author,
+    })
+    try {
+        await item.save();
+        return res.status(200).send({ message: 'Create product successfull, please reload page' });
+    } catch (err) {
+        console.log('Error', err);
+        return res.status(442).send({ error: err.message });
+    }
+})
+
 app.post('/save-payment', async(req, res) => {
     const {buyer, seller, status, totalPrice, items} = req.body;
     const payment = new Payment({
