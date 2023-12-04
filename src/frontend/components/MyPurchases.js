@@ -23,6 +23,7 @@ export default function MyPurchases({ marketplace, nft, account }) {
       const totalPrice = await marketplace.getTotalPrice(i.itemId)
       const sold = await marketplace.isSold(i.itemId)
       const tokenId = await marketplace.getTokenId(i.itemId)
+      const owner = await marketplace.ownerOf(i.itemId);
       // define listed item object
       let purchasedItem = {
         totalPrice,
@@ -32,13 +33,16 @@ export default function MyPurchases({ marketplace, nft, account }) {
         description: metadata.description,
         image: metadata.image,
         sold: sold,
-        tokenId: tokenId
+        tokenId: tokenId,
+        owner: owner
+      } 
+      if (owner.toLowerCase() === account.toLowerCase()) {
+        return purchasedItem;
       }
-      return purchasedItem
-      
       }))
+    const filteredPurchases = purchases.filter(item => item !== undefined);
     setLoading(false)
-    setPurchases(purchases)
+    setPurchases(filteredPurchases)
   }
 
   const loadPurchasedItems = () => {
@@ -72,47 +76,39 @@ export default function MyPurchases({ marketplace, nft, account }) {
     // Fetch the contract address
     await fetch('http://localhost:3001/contractsData/NFT.json')
       .then(response => {
-        console.log("Status code:", response.status);
         return response.json();
       })
       .then(data => {
         nftContract = data.abi;
-        console.log(nftContract);
       })
       .catch(error => console.error(error));
 
 
       await fetch('http://localhost:3001/contractsData/NFT-address.json')
       .then(response => {
-        console.log("Status code:", response.status);
         return response.json();
       })
       .then(data => {
         nftAddress = data.address;
-        console.log(nftAddress);
       })
       .catch(error => console.error(error));
 
       await fetch('http://localhost:3001/contractsData/Marketplace-address.json')
       .then(response => {
-        console.log("Status code:", response.status);
         return response.json();
       })
       .then(data => {
         marketplaceAddress = data.address;
-        console.log(marketplaceAddress);
       })
       .catch(error => console.error(error));
 
     // Fetch the contract ABI
     await fetch('http://localhost:3001/contractsData/Marketplace.json')
       .then(response => {
-        console.log("Status code:", response.status);
         return response.json();
       })
       .then(data => {
         marketplaceContract = data.abi;
-        console.log(marketplaceContract);
       });
       
     // Now you can use contractAddress and contractABI to interact with your contract

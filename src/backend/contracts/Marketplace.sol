@@ -207,4 +207,8 @@ contract Marketplace is ReentrancyGuard {
         Item storage item = items[itemId];
         return item.tokenId;
     }
+
+    function ownerOf(uint _itemId) public view returns (address) {
+        return items[_itemId].owner;
+    }
 }
