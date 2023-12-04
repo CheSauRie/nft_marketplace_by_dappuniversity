@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,300;1,400;1,500;1,700&family=Poppins:wght@500;700&display=swap');
+
 .App {
   text-align: center;
 }
@@ -49,17 +51,56 @@ h1 {
   justify-content: center;
 }
 
+.products .header {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  gap: 50%;
+  align-items: center;
+}
+
+.products h1 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 34px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  margin-left: 2rem;
+}
+
+.search-bar {
+  position: relative;
+  justify-self: flex-end;
+  width: 300px;
+  height: 50px;
+  flex-shrink: 0;
+}
+
 .search-bar form {
   display: flex;
   flex-direction: row;
   align-items: center;
+  border-radius: 100px;
+  border: 2px solid #EFEFEF;
+  background: #FFF;
   gap: 20px;
+  padding: 5px;
+}
+
+.search-bar form:hover {
+  border: 2px solid #3D00B7
 }
 
 .search-bar form input {
   width: 20rem;
   height: 2rem;
   padding: 1rem;
+  border: 0px;
+  border-radius: 100px;
+}
+
+.search-bar form input:focus {
+  outline: none;
 }
 
 .card-img {
@@ -75,7 +116,7 @@ h1 {
 }
 
 .pagination {
-    margin-top: 5%;
+  margin-top: 5%;
 }
 
 .product-container {
@@ -104,7 +145,7 @@ h1 {
   flex-wrap: wrap;
 }
 
-.product-container .img-list img{
+.product-container .img-list img {
   max-width: 150px;
   max-height: 100px;
   width: inherit;
@@ -120,6 +161,11 @@ h1 {
   justify-content: center;
 }
 
+.product-detail {
+  padding: 10px;
+  text-align: start;
+}
+
 .product-detail .btn-group {
   display: flex;
   gap: 10px;
@@ -128,10 +174,32 @@ h1 {
 
 .model-container {
   position: fixed;
-  top: 10%;
-  left: 20%;
+  top: 0;
+  left: 0;
   background-color: #fff;
-  width: 960px;
-  height: 640px;
-  border: 1px solid #282c34
+  width: 100%;
+  height: 100%;
+  border: 1px solid #282c34;
+  z-index: 100;
+}
+
+.model-container .header {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.color-picker {
+  display: flex;
+  padding: 20px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.color-picker .row {
+  display: flex;
+  gap: 10px;
 }

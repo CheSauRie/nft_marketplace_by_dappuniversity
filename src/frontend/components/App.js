@@ -23,6 +23,8 @@ import { useEffect } from "react";
 
 import './App.css';
 import ProductDetail from "./ProductDetail.js";
+import Workshop from "./Workshop.js";
+import { fetchJson } from "ethers/lib/utils.js";
 
 function App() {
   const [loading, setLoading] = useState(true)
@@ -32,6 +34,14 @@ function App() {
   const [marketplace, setMarketplace] = useState({})
   const [cart, setCart] = useState([]);
   const [cartCount, setCartCount] = useState(0);
+  const [productsData, setProductsData] = useState([]);
+  const [workshopData, setWorkshopData] = useState([]);
+  const [productDetail, setProductDetail] = useState({
+    price: "",
+    brand: "",
+    images_list: "",
+});
+
   // MetaMask Login/Connect
   const web3Handler = async () => {
     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
@@ -52,20 +62,75 @@ function App() {
     loadContracts(signer)
   }
 
-  const checkCustomer = () => {
+  const fetchProductsData = () => {
+
+    var requestOptions = {
+      method: 'GET',
+      redirect: 'follow',
+    };
+
+    fetch(`http://localhost:3001/product/${null}`, requestOptions)
+      .then(response => response.text())
+      .then(result => {
+        console.log('executed');
+        console.log(result);
+        setProductsData(JSON.parse(result));
+        console.log(productsData);
+      }).catch(error => console.log('error', error));
+
+  }
+
+  const fetchWorkshopData = () => {
+    var requestOptions = {
+      method: 'GET',
+      redirect: 'follow',
+    };
+
+    fetch(`http://localhost:3001/workshop-item`, requestOptions)
+      .then(response => response.text())
+      .then(result => {
+        console.log('executed');
+        console.log(result);
+        setWorkshopData(JSON.parse(result));
+        console.log(workshopData);
+      }).catch(error => console.log('error', error));
+  }
+
+  const loadProductDetail = (productName) => {
     var requestOptions = {
         method: 'GET',
         redirect: 'follow'
     };
 
-    fetch(`http://localhost:3001/auth/${account}`, requestOptions)
+    fetch(`http://localhost:3001/product/${productName}`, requestOptions)
         .then(response => response.json())
         .then(result => {
-            if (result.message === true) {
-              setAuth(true);
-            }
+            console.log('Load product detail successfull');
+            console.log(result);
+            setProductDetail({
+                ...productDetail,
+                brand: result[0].brand,
+                price: result[0].price,
+                images_list: result[0].images_list
+            });
         }).
         catch(error => console.log('error', error));
+  }
+
+  const checkCustomer = () => {
+    var requestOptions = {
+      method: 'GET',
+      redirect: 'follow'
+    };
+
+    fetch(`http://localhost:3001/auth/${account}`, requestOptions)
+      .then(response => response.json())
+      .then(result => {
+        if (result.message === true) {
+          setAuth(true);
+        }
+      }).
+      catch(error => console.log('error', error));
   }
 
   const loadContracts = async (signer) => {
@@ -76,7 +141,7 @@ function App() {
     setNFT(nft)
     setLoading(false)
   }
-  
+
   checkCustomer();
 
   return (
@@ -84,7 +149,7 @@ function App() {
       <div className="App">
         <>
           <Navigation web3Handler={web3Handler} account={account} cartCount={cartCount}
-            setCartCount={setCartCount} />
+            setCartCount={setCartCount} fetchProductsData={fetchProductsData} fetchWorkshopData={fetchWorkshopData} />
         </>
         <div>
           {loading ? (
@@ -111,16 +176,20 @@ function App() {
               } />
               <Route path="/products" element={
                 <Products cart={cart}
-                  setCart={setCart} setCartCount={setCartCount} />
+                  setCart={setCart} setCartCount={setCartCount} productsData={productsData} setProductsData={setProductsData}
+                  loadProductDetail={loadProductDetail} />
               } />
               <Route path="/cart" element={
                 <Cart account={account} auth={auth} cart={cart} setCart={setCart} setCartCount={setCartCount} />
               } />
               <Route path="/rewards" element={
-                <Rewards  marketplace={marketplace} nft={nft} account={account}/>
+                <Rewards marketplace={marketplace} nft={nft} account={account} />
               } />
               <Route path="/products/:productName" element={
-                <ProductDetail cart={cart} setCart={setCart} setCartCount={setCartCount}/>
+                <ProductDetail account={account} cart={cart} setCart={setCart} setCartCount={setCartCount} productDetail={productDetail} />
+              } />
+              <Route path="/workshop" element={
+                <Workshop cart={cart} setCart={setCart} setCartCount={setCartCount} workshopData={workshopData} />
               } />
             </Routes>
           )}
