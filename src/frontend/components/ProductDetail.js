@@ -1,14 +1,19 @@
-import React, { useState } from "react"
+import React, { useState, useRef } from "react"
 import { useParams, useSearchParams } from "react-router-dom"
 import { Button } from "react-bootstrap";
-import { Canvas } from '@react-three/fiber';
+import { Canvas, useThree } from '@react-three/fiber';
 import { Model } from './Af1';
 import { Suspense } from 'react';
-import { OrbitControls } from '@react-three/drei';
-import { set } from "mongoose";
+import { OrbitControls, Environment, ContactShadows } from '@react-three/drei';
+
+import { useControls, button, folder } from 'leva'
 
 
-export default function ProductDetail({ cart, setCart, setCartCount }) {
+
+
+export default function ProductDetail({account, cart, setCart, setCartCount, productDetail }) {
+
+    const [capturedImage, setCapturedImage] = useState(null);
 
     const addToCart = (item) => {
         setCart(prev => [...prev, item])
@@ -17,6 +22,7 @@ export default function ProductDetail({ cart, setCart, setCartCount }) {
 
     const { productName } = useParams();
     const [renderModel, setRenderModel] = useState(false);
+    const [renderForm, setRenderForm] = useState(false);
 
     //Shoes parts color customer customization variables
     const [lacesColor, setLacesColor] = useState('#FFFFFF');
@@ -29,44 +35,75 @@ export default function ProductDetail({ cart, setCart, setCartCount }) {
     const [index, setIndex] = useState(0);
     const [size, setSize] = useState(7);
 
-    const [productDetail, setProductDetail] = useState({
-        price: "",
-        brand: "",
-        images_list: "",
-    });
+    const addWorkshopItem = () => {
+        var raw = JSON.stringify({
+            "title": productDetail.title,
+            "price": productDetail.price,
+            "images_list": productDetail.images_list,
+            "author": account,
+        })
+        fetch("http://localhost:3001/create-item", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: raw,
+            redirect: 'follow'
+        }).then(res => res.json()).then(
+            result => {
+                alert(result);
+            }
+        ).catch(error => console.log('error', error));
+    }
+
+    const Scene = () => {
+        const gl = useThree((state) => state.gl)
+        useControls({
+            screenshot: button(() => {
+                const link = document.createElement('a')
+                link.setAttribute('download', 'canvas.png')
+                link.setAttribute('href', gl.domElement.toDataURL('image/png').replace('image/png', 'image/octet-stream'))
+                link.click()
+            })
+        })
+        return (
+            <>
+                <ambientLight intensity={0.7} />
+                <spotLight intensity={0.5} angle={0.1} penumbra={1} position={[10, 15, -5]} castShadow />
+                <Environment preset="city" background blur={1} />
+                <ContactShadows resolution={512} position={[0, -0.8, 0]} opacity={1} scale={10} blur={2} far={0.8} />
+                <Model
+                    customColors={{
+                        laces: lacesColor,
+                        flaps: flapsColor,
+                        soles: solesColor,
+                        main: mainColor,
+                        tag: tagsColor
+                    }} />
+                <OrbitControls enablePan={true} enableZoom={true} enableRotate={true} />
+            </>
+        )
+    }
 
     const sizeArray = [7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11];
 
-    const loadProductDetail = () => {
-        var requestOptions = {
-            method: 'GET',
-            redirect: 'follow'
-        };
-
-        fetch(`http://localhost:3001/product/${productName}`, requestOptions)
-            .then(response => response.json())
-            .then(result => {
-                console.log('Load product detail successfull');
-                console.log(result);
-                setProductDetail({
-                    ...productDetail,
-                    brand: result[0].brand,
-                    price: result[0].price,
-                    images_list: result[0].images_list
-                });
-            }).
-            catch(error => console.log('error', error));
-    }
-
     console.log(productDetail);
-    loadProductDetail();
+    //loadProductDetail();
 
     const item = {
         title: productName,
         brand: productDetail.brand,
         price: productDetail.price,
-        images_list: productDetail.images_list
+        images_list: productDetail.images_list,
+        features: {
+            "laces": lacesColor,
+            "soles": solesColor,
+            "flaps": flapsColor,
+            "main" : mainColor,
+            "tags" : tagsColor
+        }
     };
+
 
     return (
         <div className="product-container">
@@ -122,44 +159,64 @@ export default function ProductDetail({ cart, setCart, setCartCount }) {
                     }
                 </div>
             </div>
+
             {
                 renderModel && (
                     <div className="model-container">
-                        <Button variant="dark" onClick={() => { setRenderModel(false) }}>Close</Button>
-                        <Canvas>
-                            <Suspense fallback={null}>
-                                <ambientLight intensity={1.0} />
-                                <spotLight intensity={0.9} angle={1.0} penumbra={1}
-                                    position={[10, 15, 10]} castShadow />
-                                <Model customColors={{
-                                    laces: lacesColor,
-                                    flaps: flapsColor,
-                                    soles: solesColor,
-                                    main: mainColor,
-                                    tag: tagsColor
-                                }} />
-                                <OrbitControls enablePan={true} enableZoom={true} enableRotate={true} />
-                            </Suspense>
-                        </Canvas>
-                        <div className="color-picker">
-                            <div>
-                                <input type="color" id="laces" name="laces" value={lacesColor}
-                                    onChange={(e) => setLacesColor(e.target.value)}></input>
-                                <label for="laces">Laces</label>
-                                <input type="color" id="flaps" name="flaps" value={flapsColor}
-                                    onChange={(e) => setflapsColor(e.target.value)}></input>
-                                <label for="flaps">Flaps</label>
-                                <input type="color" id="soles" name="soles" value={solesColor}
-                                    onChange={(e) => setSolesColor(e.target.value)}></input>
-                                <label for="soles">Sole</label>
-                                <input type="color" id="main" name="main" value={mainColor}
-                                    onChange={(e) => setMainColor(e.target.value)}></input>
-                                <label for="main">Main</label>
-                                <input type="color" id="tags" name="tags" value={tagsColor}
-                                    onChange={(e) => setTagsColor(e.target.value)}></input>
-                                <label for="tags">Tag</label>
+                        <div className="header">
+                            <h1>{productName} by you</h1>
+                            <Button
+                                style={{ position: 'fixed', right: 50, borderRadius: 20 }}
+                                onClick={() => {
+                                    setRenderModel(false);
+                                }}
+                                variant="dark">Done</Button>
+                        </div>
+                        <div id="model-canvas" style={{ display: 'flex', flexDirection: 'row', height: '70vh' }}>
+                            <Canvas
+                                gl={{ preserveDrawingBuffer: true }}
+                                camera={{ position: [0, 0, 4], fov: 40, near: 0.1, far: 1000 }}
+                                shadows={true}
+                            >
+                                <Suspense fallback={null}>
+                                    <Scene />
+                                </Suspense>
+                            </Canvas>
+                            <div className="color-picker">
+                                <div className="row">
+                                    <input type="color" id="laces" name="laces" value={lacesColor}
+                                        onChange={(e) => setLacesColor(e.target.value)}></input>
+                                    <label for="laces">Laces</label>
+                                </div>
+                                <div className="row">
+                                    <input type="color" id="flaps" name="flaps" value={flapsColor}
+                                        onChange={(e) => setflapsColor(e.target.value)}></input>
+                                    <label for="flaps">Flaps</label>
+                                </div>
+                                <div className="row">
+                                    <input type="color" id="soles" name="soles" value={solesColor}
+                                        onChange={(e) => setSolesColor(e.target.value)}></input>
+                                    <label for="soles">Sole</label>
+                                </div>
+                                <div className="row">
+                                    <input type="color" id="main" name="main" value={mainColor}
+                                        onChange={(e) => setMainColor(e.target.value)}></input>
+                                    <label for="main">Main</label>
+                                </div>
+                                <div className="row">
+                                    <input type="color" id="tags" name="tags" value={tagsColor}
+                                        onChange={(e) => setTagsColor(e.target.value)}></input>
+                                    <label for="tags">Tag</label>
+                                </div>
                             </div>
                         </div>
+                    </div>
+                )
+            }
+            {
+                renderForm && (
+                    <div className="create-item-form">
+                        
                     </div>
                 )
             }
