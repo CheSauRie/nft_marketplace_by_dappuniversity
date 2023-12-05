@@ -3,7 +3,7 @@ const Product = require("./models/Product.js")
 const Payment = require("./models/Payment.js")
 require("./db.js");
 const bodyParser = require("body-parser");
-
+const path = require("path");
 const mongoose = require("mongoose");
 const Customer = require("./models/Customer.js");
 var cors = require('cors')

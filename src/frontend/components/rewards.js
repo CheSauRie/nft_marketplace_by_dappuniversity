@@ -41,7 +41,7 @@ export default function Rewards({ marketplace, nft, account }) {
 
     
     const getNFT = async (item) => {
-      fetch(`http://localhost:3001/total-spent/${account}`)
+      await fetch(`http://localhost:3001/total-spent/${account}`)
         .then(response => response.json())
         .then(data => {
           totalSpent = data[0].totalPrice;
