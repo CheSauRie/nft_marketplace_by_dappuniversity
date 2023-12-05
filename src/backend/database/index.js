@@ -14,26 +14,10 @@ const WorkshopItem = require("./models/WorkshopItem.js");
 
 require("dotenv").config();
 
-var fs = require('fs');
-var path = require('path');
-
-var multer = require('multer');
- 
-var storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads')
-    },
-    filename: (req, file, cb) => {
-        cb(null, file.fieldname + '-' + Date.now())
-    }
-});
- 
-var upload = multer({ storage: storage });
-
 const port = 3001;
 const app = express();
 app.use(cors())
-app.use(express.json());
+//app.use(express.json());
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
@@ -41,7 +25,7 @@ app.listen(port, () => {
 
 const limit = 20;
 
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: "50mb" }));
 
 app.get('/product/:target', async (req, res) => {
     try {
@@ -128,10 +112,11 @@ app.post('/create-customer', async (req, res) => {
     }
 })
 
-app.post('/create-item', upload.single('image') ,async (req, res) => {
+app.post('/create-item' , async (req, res) => {
     const {
         title,
         price,
+        img,
         author,
     } = req.body;
     const brand = 'BOAT';
@@ -139,17 +124,13 @@ app.post('/create-item', upload.single('image') ,async (req, res) => {
         title,
         price,
         brand,
-        img: {
-            data: fs.readFileSync(path.join(__dirname + '/uploads/' + req.file.filename)),
-            contentType: 'image/png'
-        },
+        image: img,
         author,
     })
     try {
         await item.save();
         return res.status(200).send({ message: 'Create product successfull, please reload page' });
     } catch (err) {
-        console.log('Error', err);
         return res.status(442).send({ error: err.message });
     }
 })
