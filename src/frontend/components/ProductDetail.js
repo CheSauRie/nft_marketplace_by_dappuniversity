@@ -1,17 +1,17 @@
 import React, { useState, useRef } from "react"
 import { useParams, useSearchParams } from "react-router-dom"
-import { Button } from "react-bootstrap";
+import { Button, Row, Form } from "react-bootstrap";
 import { Canvas, useThree } from '@react-three/fiber';
 import { Model } from './Af1';
 import { Suspense } from 'react';
 import { OrbitControls, Environment, ContactShadows } from '@react-three/drei';
 
-import { useControls, button, folder } from 'leva'
+import { useControls, button, folder } from 'leva';
 
 
 
 
-export default function ProductDetail({account, cart, setCart, setCartCount, productDetail }) {
+export default function ProductDetail({ account, cart, setCart, setCartCount, productDetail }) {
 
     const [capturedImage, setCapturedImage] = useState(null);
 
@@ -35,11 +35,33 @@ export default function ProductDetail({account, cart, setCart, setCartCount, pro
     const [index, setIndex] = useState(0);
     const [size, setSize] = useState(7);
 
+    const [selectedImage, setSelectedImage] = useState("");
+
+    const [itemInfo, setItemInfo] = React.useState({
+        title: '',
+        price: ''
+    })
+
+    const convertToBase64 = (e) => {
+        console.log(e);
+        var reader = new FileReader();
+        reader.readAsDataURL(e.target.files[0]);
+        reader.onload = () => {
+            console.log(reader.result);
+            setSelectedImage(reader.result);
+        };
+        reader.onerror = error => {
+            console.log("Error: ", error);
+        };
+    }
+
+    console.log(selectedImage);
+
     const addWorkshopItem = () => {
         var raw = JSON.stringify({
-            "title": productDetail.title,
-            "price": productDetail.price,
-            "images_list": productDetail.images_list,
+            "title": itemInfo.title,
+            "price": itemInfo.price + '$',
+            "img": selectedImage,
             "author": account,
         })
         fetch("http://localhost:3001/create-item", {
@@ -87,9 +109,6 @@ export default function ProductDetail({account, cart, setCart, setCartCount, pro
 
     const sizeArray = [7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11];
 
-    console.log(productDetail);
-    //loadProductDetail();
-
     const item = {
         title: productName,
         brand: productDetail.brand,
@@ -99,8 +118,8 @@ export default function ProductDetail({account, cart, setCart, setCartCount, pro
             "laces": lacesColor,
             "soles": solesColor,
             "flaps": flapsColor,
-            "main" : mainColor,
-            "tags" : tagsColor
+            "main": mainColor,
+            "tags": tagsColor
         }
     };
 
@@ -119,6 +138,7 @@ export default function ProductDetail({account, cart, setCart, setCartCount, pro
                 <div className="btn-group">
                     <Button variant="dark" onClick={() => addToCart(item)}>Add to cart</Button>
                     <Button variant="dark" onClick={() => { setRenderModel(true) }}>Customize with our 3D model</Button>
+                    <Button variant="dark" onClick={() => { setRenderForm(true) }}>Create item</Button>
                 </div>
                 <div className="img-list">
                     <div className="img-item" style={{ border: index === 0 ? '1px solid #000' : 'none' }} onClick={() => { setIndex(0) }}>
@@ -216,7 +236,18 @@ export default function ProductDetail({account, cart, setCart, setCartCount, pro
             {
                 renderForm && (
                     <div className="create-item-form">
-                        
+                        <div className="container-fluid mt-5 create-nft">
+                            <h1>Create your Workshop item</h1>
+                            <div className="content mx-auto">
+                                <Row className="g-4">
+                                    <Form.Control onChange={(e) => setItemInfo({ ...itemInfo, title: e.target.value })} size="lg" required type="text" placeholder="Product's title" />
+                                    <Form.Control onChange={(e) => setItemInfo({ ...itemInfo, price: e.target.value })} size="lg" required type="number" placeholder="Price" />
+                                    <Form.Control onChange={convertToBase64} size="lg" required type="file" name="file" />
+                                    <Button variant="primary" onClick={() => { addWorkshopItem() }}>Create</Button>
+                                    <Button variant="light" onClick={() => { setRenderForm(false) }}>Close</Button>
+                                </Row>
+                            </div>
+                        </div>
                     </div>
                 )
             }

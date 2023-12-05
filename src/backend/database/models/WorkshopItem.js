@@ -13,15 +13,12 @@ const workshopItemSchema = new mongoose.Schema({
     product_details: {
         type: String
     },
-    img: {
-        data: Buffer,
-        contentType: String    
-    },
+    image: String,
     features: {
         type: Array
     },
     author: {
-        type: Array
+        type: String
     }
 }, {collection: 'workshopItems'})
 
